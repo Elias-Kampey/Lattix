@@ -9,6 +9,11 @@ find_package(OpenSSL REQUIRED)
 
 add_executable(quantumshift
     src/main.c
+    src/crypto_kem.c
+)
+
+target_include_directories(quantumshift PRIVATE
+    include
 )
 
 target_link_libraries(quantumshift
