@@ -204,3 +204,86 @@ button:hover {
   background: #28323d;
   border-color: #657383;
 }
+
+/* Digital Signature */
+
+.signatureDemo {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.signatureInput {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.signatureInput label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #aeb7c2;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.signatureInput textarea {
+  width: 100%;
+  min-height: 130px;
+  resize: vertical;
+
+  padding: 16px;
+
+  background: #171c22;
+  color: #f5f5f5;
+
+  border: 1px solid #303844;
+  border-radius: 10px;
+
+  font: inherit;
+  line-height: 1.5;
+}
+
+.signatureInput textarea:focus {
+  outline: none;
+  border-color: #657383;
+}
+
+.signatureActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.signatureActions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.signatureDemo .exchangeResult {
+  margin-top: 4px;
+}
+
+.signatureDemo .metrics {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 800px) {
+  .signatureDemo .metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 500px) {
+  .signatureDemo .metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .signatureActions {
+    flex-direction: column;
+  }
+
+  .signatureActions button {
+    width: 100%;
+  }
+}

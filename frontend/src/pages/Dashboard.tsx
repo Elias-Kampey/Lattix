@@ -1,5 +1,6 @@
 import { useState } from "react"
 import KeyExchange from "../components/KeyExchange"
+import SignatureDemo from "../components/SignatureDemo"
 
 type Mode = "classical" | "post-quantum" | "hybrid"
 
@@ -98,6 +99,9 @@ function Dashboard() {
         {mode === "post-quantum" &&
         operation === "key-exchange" ? (
           <KeyExchange />
+        ) : mode === "post-quantum" &&
+          operation === "sign-verify" ? (
+          <SignatureDemo />
         ) : (
           <div>
             <h2>Cryptographic Operation</h2>
