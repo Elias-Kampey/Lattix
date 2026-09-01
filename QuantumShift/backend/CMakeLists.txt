@@ -11,6 +11,7 @@ add_executable(quantumshift
     src/main.c
     src/crypto_kem.c
     src/crypto_signature.c
+    src/crypto_aes.c
 )
 
 target_include_directories(quantumshift PRIVATE
