@@ -1,6 +1,8 @@
 import { useState } from "react"
 import KeyExchange from "../components/KeyExchange"
 import SignatureDemo from "../components/SignatureDemo"
+import EncryptionDemo from "../components/EncryptionDemo"
+import BenchmarkDashboard from "../components/BenchmarkDashboard"
 
 type Mode = "classical" | "post-quantum" | "hybrid"
 
@@ -96,12 +98,17 @@ function Dashboard() {
       </section>
 
       <section className="workspace">
-        {mode === "post-quantum" &&
+        {operation === "benchmark" ? (
+          <BenchmarkDashboard />
+        ) : mode === "post-quantum" &&
         operation === "key-exchange" ? (
           <KeyExchange />
         ) : mode === "post-quantum" &&
           operation === "sign-verify" ? (
           <SignatureDemo />
+        ) : mode === "post-quantum" &&
+          operation === "encrypt-decrypt" ? (
+          <EncryptionDemo />
         ) : (
           <div>
             <h2>Cryptographic Operation</h2>

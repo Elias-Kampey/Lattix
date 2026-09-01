@@ -287,3 +287,134 @@ button:hover {
     width: 100%;
   }
 }
+
+.encryptionDemo {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.encryptionFlow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: stretch;
+  gap: 16px;
+}
+
+.encryptionDemo .metrics {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 900px) {
+  .encryptionFlow {
+    grid-template-columns: 1fr;
+  }
+
+  .encryptionDemo .metrics {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Benchmark */
+
+.benchmarkDashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.benchmarkNotice {
+  padding: 7px 12px;
+  border: 1px solid #303844;
+  border-radius: 20px;
+  color: #9ba6b2;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.benchmarkComparison {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 20px;
+  align-items: center;
+}
+
+.benchmarkCard {
+  padding: 24px;
+  border: 1px solid #303844;
+  border-radius: 10px;
+  background: #171c22;
+}
+
+.benchmarkCard > span {
+  display: block;
+  margin-bottom: 8px;
+  color: #9ba6b2;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+}
+
+.benchmarkCard h3 {
+  margin: 0 0 22px;
+  font-size: 20px;
+}
+
+.benchmarkMetrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.benchmarkMetrics div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  padding: 14px;
+
+  border: 1px solid #272f39;
+  border-radius: 8px;
+}
+
+.benchmarkMetrics small {
+  color: #8f98a3;
+}
+
+.benchmarkMetrics strong {
+  font-size: 16px;
+}
+
+.benchmarkVs {
+  color: #657383;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.benchmarkSummary {
+  padding: 20px;
+  border: 1px solid #303844;
+  border-radius: 10px;
+  background: #171c22;
+}
+
+.benchmarkSummary h3 {
+  margin: 0 0 8px;
+}
+
+.benchmarkSummary p {
+  margin: 0;
+  color: #8f98a3;
+  line-height: 1.6;
+}
+
+@media (max-width: 800px) {
+  .benchmarkComparison {
+    grid-template-columns: 1fr;
+  }
+
+  .benchmarkVs {
+    text-align: center;
+  }
+}

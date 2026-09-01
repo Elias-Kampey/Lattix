@@ -39,3 +39,21 @@ export interface VerifyResponse {
   verificationTimeMs: number
   error?: string
 }
+
+export interface EncryptionResult extends CryptoResult {
+  ciphertext: string
+  decryptedMessage: string
+  messageMatch: boolean
+  encryptionTimeMs: number
+  decryptionTimeMs: number
+  ciphertextSize: number
+}
+
+export interface BenchmarkResult {
+  algorithm: string
+  category: "classical" | "post-quantum"
+  publicKeySize: number
+  ciphertextSize: number
+  keyGenerationTimeMs: number
+  operationTimeMs: number
+}
