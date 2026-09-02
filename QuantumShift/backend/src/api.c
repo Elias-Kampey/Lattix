@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include <unistd.h>
+
+#include "platform_compat.h"
 
 #include "api.h"
 #include "crypto_kem.h"
@@ -22,7 +23,7 @@ static int suppress_stdout(void)
         return -1;
     }
 
-    FILE *null_file = fopen("/dev/null", "w");
+    FILE *null_file = fopen(NULL_DEVICE, "w");
 
     if (null_file == NULL)
     {

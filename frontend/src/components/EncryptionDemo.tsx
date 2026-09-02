@@ -1,55 +1,26 @@
 import { useState } from "react"
-import type { EncryptionResult } from "../types/crypto"
-import {
-  encryptMessage as requestEncryptMessage,
-  USE_MOCKS,
-} from "../services/api"
+import type { AesResult } from "../types/crypto"
+import { getAes } from "../services/api"
 import ErrorMessage from "./ErrorMessage"
 
 function EncryptionDemo() {
-  const [message, setMessage] = useState(
-    "CipherShift encryption test"
-  )
-
-  const [result, setResult] =
-    useState<EncryptionResult | null>(null)
-
+  const [result, setResult] = useState<AesResult | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const runEncryption = async () => {
-    if (!message.trim()) return
-
+  const runEncryptionTest = async () => {
     setLoading(true)
     setResult(null)
     setError(null)
 
     try {
-      if (USE_MOCKS) {
-        await new Promise((resolve) =>
-          setTimeout(resolve, 800)
-        )
-
-        setResult({
-          success: true,
-          algorithm: "AES-256-GCM",
-          operation: "encrypt-decrypt",
-          ciphertext: "8f2a91c4...encrypted-data",
-          decryptedMessage: message,
-          messageMatch: true,
-          encryptionTimeMs: 0.08,
-          decryptionTimeMs: 0.06,
-          ciphertextSize: 64,
-        })
-      } else {
-        const data = await requestEncryptMessage(message)
-        setResult(data)
-      }
+      const data = await getAes()
+      setResult(data)
     } catch (err) {
       setError(
         err instanceof Error
           ? err.message
-          : "Encryption failed"
+          : "Encryption test failed"
       )
     } finally {
       setLoading(false)
@@ -60,97 +31,73 @@ function EncryptionDemo() {
     <div className="encryptionDemo">
       <div className="exchangeHeader">
         <div>
-          <h2>ML-KEM + AES-256-GCM</h2>
-          <p>
-            Post-quantum key establishment with authenticated
-            encryption
-          </p>
+          <h2>AES-256-GCM Encryption</h2>
+          <p>Authenticated symmetric encryption and tamper detection</p>
         </div>
-      </div>
 
-      <div className="signatureInput">
-        <label htmlFor="encryption-message">
-          Plaintext Message
-        </label>
-
-        <textarea
-          id="encryption-message"
-          value={message}
-          onChange={(event) =>
-            setMessage(event.target.value)
-          }
-          rows={5}
-        />
-      </div>
-
-      <div className="signatureActions">
         <button
-          onClick={runEncryption}
+          onClick={runEncryptionTest}
           disabled={loading}
         >
-          {loading
-            ? "Encrypting..."
-            : "Encrypt & Decrypt"}
+          {loading ? "Running..." : "Run Encryption Test"}
         </button>
+      </div>
+
+      <div className="encryptionFlow">
+        <div className="partyCard">
+          <span>STEP 1</span>
+          <h3>Plaintext</h3>
+          <p>Prepare data for authenticated encryption.</p>
+        </div>
+
+        <div className="flowArrow">
+          <span>→</span>
+        </div>
+
+        <div className="partyCard">
+          <span>STEP 2</span>
+          <h3>AES-256-GCM</h3>
+          <p>Encrypt and authenticate the plaintext.</p>
+        </div>
+
+        <div className="flowArrow">
+          <span>→</span>
+        </div>
+
+        <div className="partyCard">
+          <span>STEP 3</span>
+          <h3>Decrypt</h3>
+          <p>Recover plaintext and reject tampering.</p>
+        </div>
       </div>
 
       {error && <ErrorMessage message={error} />}
 
       {result && (
-        <>
-          <div className="encryptionFlow">
-            <div className="partyCard">
-              <span>STEP 1</span>
-              <h3>ML-KEM-768</h3>
-              <p>
-                Establish shared cryptographic material.
-              </p>
-            </div>
+        <div className="exchangeResult">
+          <h3>
+            Encryption Test {result.success ? "Passed ✓" : "Failed ✕"}
+          </h3>
 
-            <div className="flowArrow">
-              <span>→</span>
-            </div>
+          <div className="metrics">
+            <p>Plaintext: {result.plaintext_size} bytes</p>
+            <p>Ciphertext: {result.ciphertext_size} bytes</p>
+            <p>Authentication Tag: {result.tag_size} bytes</p>
 
-            <div className="partyCard">
-              <span>STEP 2</span>
-              <h3>AES-256-GCM</h3>
-              <p>Encrypt the plaintext message.</p>
-            </div>
+            <p>
+              Plaintext Match:{" "}
+              {result.plaintext_match ? "Yes ✓" : "No ✕"}
+            </p>
 
-            <div className="flowArrow">
-              <span>→</span>
-            </div>
+            <p>
+              Tamper Test:{" "}
+              {result.tamper_rejected ? "Rejected ✓" : "Failed ✕"}
+            </p>
 
-            <div className="partyCard">
-              <span>STEP 3</span>
-              <h3>Decrypt</h3>
-              <p>
-                Recover and authenticate the message.
-              </p>
-            </div>
+            <p>Encryption: {result.encrypt_ms} ms</p>
+            <p>Decryption: {result.decrypt_ms} ms</p>
           </div>
-
-          <div className="exchangeResult">
-            <h3>
-              Original Message Match{" "}
-              {result.messageMatch ? "✓" : "✕"}
-            </h3>
-
-            <div className="metrics">
-              <p>
-                Ciphertext: {result.ciphertextSize} bytes
-              </p>
-
-              <p>
-                Encryption: {result.encryptionTimeMs} ms
-              </p>
-
-              <p>
-                Decryption: {result.decryptionTimeMs} ms
-              </p>
-            </div>
-          </div>
-        </>
+        </div>
       )}
     </div>
   )

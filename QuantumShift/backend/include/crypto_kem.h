@@ -1,6 +1,8 @@
 #ifndef CRYPTO_KEM_H
 #define CRYPTO_KEM_H
 
+#include "platform_compat.h"
+
 #include <stddef.h>
 
 typedef struct

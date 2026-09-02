@@ -1,13 +1,10 @@
 import { useState } from "react"
-import type { KemResult } from "../types/crypto"
-import {
-  runKeyExchange as requestKeyExchange,
-  USE_MOCKS,
-} from "../services/api"
+import type { MlKemResult } from "../types/crypto"
+import { getMlKem } from "../services/api"
 import ErrorMessage from "./ErrorMessage"
 
 function KeyExchange() {
-  const [result, setResult] = useState<KemResult | null>(null)
+  const [result, setResult] = useState<MlKemResult | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -17,27 +14,8 @@ function KeyExchange() {
     setError(null)
 
     try {
-      if (USE_MOCKS) {
-        await new Promise((resolve) =>
-          setTimeout(resolve, 800)
-        )
-
-        setResult({
-          success: true,
-          algorithm: "ML-KEM-768",
-          operation: "key-exchange",
-          executionTimeMs: 0.42,
-          publicKeySize: 1184,
-          ciphertextSize: 1088,
-          sharedSecretMatch: true,
-          keyGenerationTimeMs: 0.15,
-          encapsulationTimeMs: 0.12,
-          decapsulationTimeMs: 0.15,
-        })
-      } else {
-        const data = await requestKeyExchange()
-        setResult(data)
-      }
+      const data = await getMlKem()
+      setResult(data)
     } catch (err) {
       setError(
         err instanceof Error
@@ -95,16 +73,15 @@ function KeyExchange() {
       {result && (
         <div className="exchangeResult">
           <h3>
-            Shared Secret Match{" "}
-            {result.sharedSecretMatch ? "✓" : "✕"}
+            Key Exchange {result.success ? "Successful ✓" : "Failed ✕"}
           </h3>
 
           <div className="metrics">
-            <p>Public Key: {result.publicKeySize} bytes</p>
-            <p>Ciphertext: {result.ciphertextSize} bytes</p>
-            <p>Key Generation: {result.keyGenerationTimeMs} ms</p>
-            <p>Encapsulation: {result.encapsulationTimeMs} ms</p>
-            <p>Decapsulation: {result.decapsulationTimeMs} ms</p>
+            <p>Ciphertext: {result.ciphertext_size} bytes</p>
+            <p>Shared Secret: {result.shared_secret_size} bytes</p>
+            <p>Key Generation: {result.keygen_ms} ms</p>
+            <p>Encapsulation: {result.encapsulation_ms} ms</p>
+            <p>Decapsulation: {result.decapsulation_ms} ms</p>
           </div>
         </div>
       )}

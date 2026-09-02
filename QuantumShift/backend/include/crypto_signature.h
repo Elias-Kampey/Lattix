@@ -1,6 +1,8 @@
 #ifndef CRYPTO_SIGNATURE_H
 #define CRYPTO_SIGNATURE_H
 
+#include "platform_compat.h"
+
 #include <stddef.h>
 
 typedef struct

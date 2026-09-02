@@ -1,6 +1,8 @@
 #ifndef CRYPTO_AES_H
 #define CRYPTO_AES_H
 
+#include "platform_compat.h"
+
 typedef struct
 {
     int success;
