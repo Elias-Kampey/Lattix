@@ -24,7 +24,7 @@ static double elapsed_ms(struct timespec start, struct timespec end)
     return seconds + nanoseconds;
 }
 
-int run_aes_gcm_demo(void)
+int run_aes_gcm(AESGCMResult *out)
 {
     const unsigned char plaintext[] =
         "QuantumShift AES-256-GCM test message";
@@ -56,24 +56,46 @@ int run_aes_gcm_demo(void)
 
     int result = 1;
 
+    if (out == NULL)
+    {
+        return 1;
+    }
+
+    out->success = 0;
+    out->plaintext_match = 0;
+    out->tamper_rejected = 0;
+    out->plaintext_size = 0;
+    out->ciphertext_size = 0;
+    out->tag_size = 0;
+    out->encrypt_ms = 0.0;
+    out->decrypt_ms = 0.0;
+
     printf("QuantumShift - AES-256-GCM Test\n");
     printf("--------------------------------------\n\n");
 
     /*
      * STEP 1:
-     * Generate a random AES-256 key and IV.
+     * Generate random AES-256 key and IV.
      */
 
     if (RAND_bytes(key, sizeof(key)) != 1)
     {
-        fprintf(stderr, "Failed to generate AES key.\n");
+        fprintf(
+            stderr,
+            "Failed to generate AES key.\n"
+        );
+
         ERR_print_errors_fp(stderr);
         goto cleanup;
     }
 
     if (RAND_bytes(iv, sizeof(iv)) != 1)
     {
-        fprintf(stderr, "Failed to generate AES IV.\n");
+        fprintf(
+            stderr,
+            "Failed to generate AES IV.\n"
+        );
+
         ERR_print_errors_fp(stderr);
         goto cleanup;
     }
@@ -83,14 +105,18 @@ int run_aes_gcm_demo(void)
 
     /*
      * STEP 2:
-     * Encrypt plaintext using AES-256-GCM.
+     * Encrypt plaintext.
      */
 
     encrypt_ctx = EVP_CIPHER_CTX_new();
 
     if (encrypt_ctx == NULL)
     {
-        fprintf(stderr, "Failed to create encryption context.\n");
+        fprintf(
+            stderr,
+            "Failed to create encryption context.\n"
+        );
+
         goto cleanup;
     }
 
@@ -102,7 +128,11 @@ int run_aes_gcm_demo(void)
             NULL
         ) != 1)
     {
-        fprintf(stderr, "Failed to initialize AES-GCM encryption.\n");
+        fprintf(
+            stderr,
+            "Failed to initialize AES-GCM encryption.\n"
+        );
+
         ERR_print_errors_fp(stderr);
         goto cleanup;
     }
@@ -114,7 +144,11 @@ int run_aes_gcm_demo(void)
             NULL
         ) != 1)
     {
-        fprintf(stderr, "Failed to set IV length.\n");
+        fprintf(
+            stderr,
+            "Failed to set AES-GCM IV length.\n"
+        );
+
         ERR_print_errors_fp(stderr);
         goto cleanup;
     }
@@ -127,7 +161,11 @@ int run_aes_gcm_demo(void)
             iv
         ) != 1)
     {
-        fprintf(stderr, "Failed to set AES key and IV.\n");
+        fprintf(
+            stderr,
+            "Failed to set AES key and IV.\n"
+        );
+
         ERR_print_errors_fp(stderr);
         goto cleanup;
     }
@@ -144,7 +182,11 @@ int run_aes_gcm_demo(void)
             plaintext_len
         ) != 1)
     {
-        fprintf(stderr, "AES encryption failed.\n");
+        fprintf(
+            stderr,
+            "AES encryption failed.\n"
+        );
+
         ERR_print_errors_fp(stderr);
         goto cleanup;
     }
@@ -157,7 +199,11 @@ int run_aes_gcm_demo(void)
             &len
         ) != 1)
     {
-        fprintf(stderr, "AES encryption finalization failed.\n");
+        fprintf(
+            stderr,
+            "AES encryption finalization failed.\n"
+        );
+
         ERR_print_errors_fp(stderr);
         goto cleanup;
     }
@@ -171,7 +217,11 @@ int run_aes_gcm_demo(void)
             tag
         ) != 1)
     {
-        fprintf(stderr, "Failed to retrieve GCM tag.\n");
+        fprintf(
+            stderr,
+            "Failed to retrieve GCM tag.\n"
+        );
+
         ERR_print_errors_fp(stderr);
         goto cleanup;
     }
@@ -184,14 +234,18 @@ int run_aes_gcm_demo(void)
 
     /*
      * STEP 3:
-     * Decrypt the ciphertext.
+     * Decrypt valid ciphertext.
      */
 
     decrypt_ctx = EVP_CIPHER_CTX_new();
 
     if (decrypt_ctx == NULL)
     {
-        fprintf(stderr, "Failed to create decryption context.\n");
+        fprintf(
+            stderr,
+            "Failed to create decryption context.\n"
+        );
+
         goto cleanup;
     }
 
@@ -203,7 +257,11 @@ int run_aes_gcm_demo(void)
             NULL
         ) != 1)
     {
-        fprintf(stderr, "Failed to initialize AES-GCM decryption.\n");
+        fprintf(
+            stderr,
+            "Failed to initialize AES-GCM decryption.\n"
+        );
+
         ERR_print_errors_fp(stderr);
         goto cleanup;
     }
@@ -215,7 +273,11 @@ int run_aes_gcm_demo(void)
             NULL
         ) != 1)
     {
-        fprintf(stderr, "Failed to set decryption IV length.\n");
+        fprintf(
+            stderr,
+            "Failed to set decryption IV length.\n"
+        );
+
         ERR_print_errors_fp(stderr);
         goto cleanup;
     }
@@ -228,7 +290,11 @@ int run_aes_gcm_demo(void)
             iv
         ) != 1)
     {
-        fprintf(stderr, "Failed to set decryption key and IV.\n");
+        fprintf(
+            stderr,
+            "Failed to set decryption key and IV.\n"
+        );
+
         ERR_print_errors_fp(stderr);
         goto cleanup;
     }
@@ -245,7 +311,11 @@ int run_aes_gcm_demo(void)
             ciphertext_len
         ) != 1)
     {
-        fprintf(stderr, "AES decryption failed.\n");
+        fprintf(
+            stderr,
+            "AES decryption failed.\n"
+        );
+
         ERR_print_errors_fp(stderr);
         goto cleanup;
     }
@@ -259,7 +329,11 @@ int run_aes_gcm_demo(void)
             tag
         ) != 1)
     {
-        fprintf(stderr, "Failed to set GCM authentication tag.\n");
+        fprintf(
+            stderr,
+            "Failed to set GCM authentication tag.\n"
+        );
+
         ERR_print_errors_fp(stderr);
         goto cleanup;
     }
@@ -270,7 +344,11 @@ int run_aes_gcm_demo(void)
             &len
         ) != 1)
     {
-        fprintf(stderr, "Authentication failed on valid ciphertext.\n");
+        fprintf(
+            stderr,
+            "Authentication failed on valid ciphertext.\n"
+        );
+
         goto cleanup;
     }
 
@@ -299,7 +377,8 @@ int run_aes_gcm_demo(void)
 
     /*
      * STEP 4:
-     * Tamper with the ciphertext.
+     * Tamper with ciphertext and verify
+     * that GCM rejects it.
      */
 
     memcpy(
@@ -315,7 +394,11 @@ int run_aes_gcm_demo(void)
 
     if (decrypt_ctx == NULL)
     {
-        fprintf(stderr, "Failed to create tamper test context.\n");
+        fprintf(
+            stderr,
+            "Failed to create tamper-test context.\n"
+        );
+
         goto cleanup;
     }
 
@@ -398,14 +481,39 @@ int run_aes_gcm_demo(void)
     printf("Encryption:      %.3f ms\n", encrypt_ms);
     printf("Decryption:      %.3f ms\n", decrypt_ms);
 
+    /*
+     * Save result data for API/frontend use.
+     */
+
+    out->success = 1;
+    out->plaintext_match = 1;
+    out->tamper_rejected = 1;
+
+    out->plaintext_size = plaintext_len;
+    out->ciphertext_size = ciphertext_len;
+    out->tag_size = AES_TAG_SIZE;
+
+    out->encrypt_ms = encrypt_ms;
+    out->decrypt_ms = decrypt_ms;
+
     result = 0;
 
 cleanup:
 
-    OPENSSL_cleanse(key, sizeof(key));
+    OPENSSL_cleanse(
+        key,
+        sizeof(key)
+    );
 
     EVP_CIPHER_CTX_free(encrypt_ctx);
     EVP_CIPHER_CTX_free(decrypt_ctx);
 
     return result;
+}
+
+int run_aes_gcm_demo(void)
+{
+    AESGCMResult result;
+
+    return run_aes_gcm(&result);
 }
