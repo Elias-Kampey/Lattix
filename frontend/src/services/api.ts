@@ -1,25 +1,17 @@
 import type {
-  KemResult,
-  SignResponse,
-  VerifyResponse,
-  EncryptionResult,
-  BenchmarkResult,
+  MlKemResult,
+  MlDsaResult,
+  AesResult,
 } from "../types/crypto"
 
 const API_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:8080"
+  import.meta.env.VITE_API_URL || "http://localhost:3001"
 
-export const USE_MOCKS =
-  import.meta.env.VITE_USE_MOCKS === "true"
-
-async function request<T>(
-  path: string,
-  options?: RequestInit
-): Promise<T> {
+async function request<T>(path: string): Promise<T> {
   let response: Response
 
   try {
-    response = await fetch(`${API_URL}${path}`, options)
+    response = await fetch(`${API_URL}${path}`)
   } catch {
     throw new Error("Unable to connect to CipherShift backend")
   }
@@ -47,60 +39,16 @@ async function request<T>(
   }
 }
 
-export async function runKeyExchange(): Promise<KemResult> {
-  return request<KemResult>("/kem", {
-    method: "POST",
-  })
+export function getMlKem(): Promise<MlKemResult> {
+  return request<MlKemResult>("/api/ml-kem")
 }
 
-export async function signMessage(
-  message: string
-): Promise<SignResponse> {
-  return request<SignResponse>("/sign", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ message }),
-  })
+export function getMlDsa(): Promise<MlDsaResult> {
+  return request<MlDsaResult>("/api/ml-dsa")
 }
 
-export async function verifySignature(
-  message: string,
-  signature: string,
-  publicKey: string
-): Promise<VerifyResponse> {
-  return request<VerifyResponse>("/verify", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      message,
-      signature,
-      publicKey,
-    }),
-  })
-}
-
-export async function encryptMessage(
-  message: string
-): Promise<EncryptionResult> {
-  return request<EncryptionResult>("/encrypt", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ message }),
-  })
-}
-
-export async function getBenchmarks(): Promise<
-  BenchmarkResult[]
-> {
-  return request<BenchmarkResult[]>("/benchmark", {
-    method: "GET",
-  })
+export function getAes(): Promise<AesResult> {
+  return request<AesResult>("/api/aes")
 }
 
 export { API_URL }

@@ -19,7 +19,7 @@ static double elapsed_ms(struct timespec start, struct timespec end)
     return seconds + nanoseconds;
 }
 
-int run_ml_kem_demo(void)
+int run_ml_kem(MLKEMResult *out)
 {
     EVP_PKEY_CTX *keygen_ctx = NULL;
     EVP_PKEY_CTX *encap_ctx = NULL;
@@ -43,6 +43,18 @@ int run_ml_kem_demo(void)
     double decap_ms = 0.0;
 
     int result = 1;
+
+    if (out == NULL)
+    {
+        return 1;
+    }
+
+    out->success = 0;
+    out->ciphertext_size = 0;
+    out->shared_secret_size = 0;
+    out->keygen_ms = 0.0;
+    out->encapsulation_ms = 0.0;
+    out->decapsulation_ms = 0.0;
 
     printf("QuantumShift - ML-KEM-768 Key Exchange\n");
     printf("--------------------------------------\n\n");
@@ -137,8 +149,7 @@ int run_ml_kem_demo(void)
     }
 
     /*
-     * Ask OpenSSL how large the ciphertext
-     * and shared-secret buffers must be.
+     * Ask OpenSSL for required buffer sizes.
      */
 
     if (EVP_PKEY_encapsulate(
@@ -203,7 +214,7 @@ int run_ml_kem_demo(void)
 
     /*
      * STEP 3:
-     * Alice decapsulates Bob's ciphertext.
+     * Alice decapsulates the ciphertext.
      */
 
     decap_ctx =
@@ -236,8 +247,7 @@ int run_ml_kem_demo(void)
     }
 
     /*
-     * Ask OpenSSL how large Alice's
-     * shared-secret buffer must be.
+     * Ask OpenSSL for Alice's shared-secret size.
      */
 
     if (EVP_PKEY_decapsulate(
@@ -299,14 +309,14 @@ int run_ml_kem_demo(void)
 
     /*
      * STEP 4:
-     * Compare Bob's secret with Alice's secret.
+     * Compare Bob's and Alice's shared secrets.
      */
 
     printf("Comparing shared secrets...\n");
 
     if (
         bob_secret_len == alice_secret_len &&
-        memcmp(
+        CRYPTO_memcmp(
             bob_secret,
             alice_secret,
             bob_secret_len
@@ -321,38 +331,26 @@ int run_ml_kem_demo(void)
         goto cleanup;
     }
 
-    printf("\n");
-    printf("Results\n");
+    printf("\nResults\n");
     printf("--------------------------------------\n");
 
-    printf(
-        "Algorithm:          ML-KEM-768\n"
-    );
+    printf("Algorithm:          ML-KEM-768\n");
+    printf("Ciphertext size:    %zu bytes\n", ciphertext_len);
+    printf("Shared secret size: %zu bytes\n", bob_secret_len);
+    printf("Key generation:     %.3f ms\n", keygen_ms);
+    printf("Encapsulation:      %.3f ms\n", encap_ms);
+    printf("Decapsulation:      %.3f ms\n", decap_ms);
 
-    printf(
-        "Ciphertext size:    %zu bytes\n",
-        ciphertext_len
-    );
+    /*
+     * Store reusable results for API/frontend use.
+     */
 
-    printf(
-        "Shared secret size: %zu bytes\n",
-        bob_secret_len
-    );
-
-    printf(
-        "Key generation:     %.3f ms\n",
-        keygen_ms
-    );
-
-    printf(
-        "Encapsulation:      %.3f ms\n",
-        encap_ms
-    );
-
-    printf(
-        "Decapsulation:      %.3f ms\n",
-        decap_ms
-    );
+    out->success = 1;
+    out->ciphertext_size = ciphertext_len;
+    out->shared_secret_size = bob_secret_len;
+    out->keygen_ms = keygen_ms;
+    out->encapsulation_ms = encap_ms;
+    out->decapsulation_ms = decap_ms;
 
     result = 0;
 
@@ -390,4 +388,11 @@ cleanup:
     EVP_PKEY_free(keypair);
 
     return result;
+}
+
+int run_ml_kem_demo(void)
+{
+    MLKEMResult result;
+
+    return run_ml_kem(&result);
 }

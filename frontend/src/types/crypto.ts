@@ -1,59 +1,40 @@
-export interface CryptoResult {
+export interface MlKemResult {
   success: boolean
   algorithm: string
-  operation: string
-  executionTimeMs?: number
-  error?: string
+
+  ciphertext_size: number
+  shared_secret_size: number
+
+  keygen_ms: number
+  encapsulation_ms: number
+  decapsulation_ms: number
 }
 
-export interface KemResult extends CryptoResult {
-  publicKeySize: number
-  ciphertextSize: number
-  sharedSecretMatch: boolean
-  keyGenerationTimeMs: number
-  encapsulationTimeMs: number
-  decapsulationTimeMs: number
-}
-
-export interface SignatureResult extends CryptoResult {
-  signatureSize: number
-  signatureValid: boolean
-  signingTimeMs: number
-  verificationTimeMs: number
-}
-
-export interface SignResponse {
+export interface MlDsaResult {
   success: boolean
   algorithm: string
-  signature: string
-  publicKey: string
-  signatureSize: number
-  signingTimeMs: number
-  error?: string
+
+  signature_size: number
+
+  original_valid: boolean
+  tampered_valid: boolean
+
+  keygen_ms: number
+  sign_ms: number
+  verify_ms: number
 }
 
-export interface VerifyResponse {
+export interface AesResult {
   success: boolean
   algorithm: string
-  signatureValid: boolean
-  verificationTimeMs: number
-  error?: string
-}
 
-export interface EncryptionResult extends CryptoResult {
-  ciphertext: string
-  decryptedMessage: string
-  messageMatch: boolean
-  encryptionTimeMs: number
-  decryptionTimeMs: number
-  ciphertextSize: number
-}
+  plaintext_size: number
+  ciphertext_size: number
+  tag_size: number
 
-export interface BenchmarkResult {
-  algorithm: string
-  category: "classical" | "post-quantum"
-  publicKeySize: number
-  ciphertextSize: number
-  keyGenerationTimeMs: number
-  operationTimeMs: number
+  plaintext_match: boolean
+  tamper_rejected: boolean
+
+  encrypt_ms: number
+  decrypt_ms: number
 }

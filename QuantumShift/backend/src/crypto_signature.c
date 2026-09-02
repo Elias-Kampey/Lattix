@@ -19,7 +19,7 @@ static double elapsed_ms(struct timespec start, struct timespec end)
     return seconds + nanoseconds;
 }
 
-int run_ml_dsa_demo(void)
+int run_ml_dsa(MLDSAResult *out)
 {
     EVP_PKEY_CTX *keygen_ctx = NULL;
     EVP_PKEY *keypair = NULL;
@@ -46,6 +46,19 @@ int run_ml_dsa_demo(void)
     int verify_result = 0;
     int tamper_result = 0;
     int result = 1;
+
+    if (out == NULL)
+    {
+        return 1;
+    }
+
+    out->success = 0;
+    out->original_valid = 0;
+    out->tampered_valid = 0;
+    out->signature_size = 0;
+    out->keygen_ms = 0.0;
+    out->sign_ms = 0.0;
+    out->verify_ms = 0.0;
 
     printf("QuantumShift - ML-DSA-65 Signature Test\n");
     printf("--------------------------------------\n\n");
@@ -107,7 +120,7 @@ int run_ml_dsa_demo(void)
 
     /*
      * STEP 2:
-     * Sign the original message.
+     * Sign the message.
      */
 
     sign_ctx = EVP_MD_CTX_new();
@@ -138,10 +151,6 @@ int run_ml_dsa_demo(void)
         ERR_print_errors_fp(stderr);
         goto cleanup;
     }
-
-    /*
-     * Ask OpenSSL how large the signature buffer must be.
-     */
 
     if (EVP_DigestSign(
             sign_ctx,
@@ -268,7 +277,7 @@ int run_ml_dsa_demo(void)
 
     /*
      * STEP 4:
-     * Tamper with the message and verify again.
+     * Test the same signature against a modified message.
      */
 
     EVP_MD_CTX_free(verify_ctx);
@@ -342,6 +351,18 @@ int run_ml_dsa_demo(void)
     printf("Signing:         %.3f ms\n", sign_ms);
     printf("Verification:    %.3f ms\n", verify_ms);
 
+    /*
+     * Store reusable result data for the API.
+     */
+
+    out->success = 1;
+    out->original_valid = 1;
+    out->tampered_valid = 0;
+    out->signature_size = signature_len;
+    out->keygen_ms = keygen_ms;
+    out->sign_ms = sign_ms;
+    out->verify_ms = verify_ms;
+
     result = 0;
 
 cleanup:
@@ -358,4 +379,11 @@ cleanup:
     EVP_PKEY_CTX_free(keygen_ctx);
 
     return result;
+}
+
+int run_ml_dsa_demo(void)
+{
+    MLDSAResult result;
+
+    return run_ml_dsa(&result);
 }
