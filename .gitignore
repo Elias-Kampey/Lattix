@@ -1,0 +1,5 @@
+QuantumShift/backend/build/
+*.o
+*.out
+.DS_Store
+
