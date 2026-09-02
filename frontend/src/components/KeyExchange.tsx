@@ -1,32 +1,52 @@
 import { useState } from "react"
 import type { KemResult } from "../types/crypto"
+import {
+  runKeyExchange as requestKeyExchange,
+  USE_MOCKS,
+} from "../services/api"
+import ErrorMessage from "./ErrorMessage"
 
 function KeyExchange() {
   const [result, setResult] = useState<KemResult | null>(null)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const runKeyExchange = () => {
+  const runKeyExchange = async () => {
     setLoading(true)
     setResult(null)
+    setError(null)
 
-    // Temporary mock result.
-    // This will later be replaced with MK's C backend API.
-    setTimeout(() => {
-      setResult({
-        success: true,
-        algorithm: "ML-KEM-768",
-        operation: "key-exchange",
-        executionTimeMs: 0.42,
-        publicKeySize: 1184,
-        ciphertextSize: 1088,
-        sharedSecretMatch: true,
-        keyGenerationTimeMs: 0.15,
-        encapsulationTimeMs: 0.12,
-        decapsulationTimeMs: 0.15,
-      })
+    try {
+      if (USE_MOCKS) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, 800)
+        )
 
+        setResult({
+          success: true,
+          algorithm: "ML-KEM-768",
+          operation: "key-exchange",
+          executionTimeMs: 0.42,
+          publicKeySize: 1184,
+          ciphertextSize: 1088,
+          sharedSecretMatch: true,
+          keyGenerationTimeMs: 0.15,
+          encapsulationTimeMs: 0.12,
+          decapsulationTimeMs: 0.15,
+        })
+      } else {
+        const data = await requestKeyExchange()
+        setResult(data)
+      }
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Key exchange failed"
+      )
+    } finally {
       setLoading(false)
-    }, 1000)
+    }
   }
 
   return (
@@ -69,6 +89,8 @@ function KeyExchange() {
           <p>Recovers the same shared secret.</p>
         </div>
       </div>
+
+      {error && <ErrorMessage message={error} />}
 
       {result && (
         <div className="exchangeResult">

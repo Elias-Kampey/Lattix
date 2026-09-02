@@ -1,5 +1,10 @@
 import { useState } from "react"
 import type { EncryptionResult } from "../types/crypto"
+import {
+  encryptMessage as requestEncryptMessage,
+  USE_MOCKS,
+} from "../services/api"
+import ErrorMessage from "./ErrorMessage"
 
 function EncryptionDemo() {
   const [message, setMessage] = useState(
@@ -10,28 +15,45 @@ function EncryptionDemo() {
     useState<EncryptionResult | null>(null)
 
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const runEncryption = () => {
+  const runEncryption = async () => {
     if (!message.trim()) return
 
     setLoading(true)
     setResult(null)
+    setError(null)
 
-    setTimeout(() => {
-      setResult({
-        success: true,
-        algorithm: "AES-256-GCM",
-        operation: "encrypt-decrypt",
-        ciphertext: "8f2a91c4...encrypted-data",
-        decryptedMessage: message,
-        messageMatch: true,
-        encryptionTimeMs: 0.08,
-        decryptionTimeMs: 0.06,
-        ciphertextSize: 64,
-      })
+    try {
+      if (USE_MOCKS) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, 800)
+        )
 
+        setResult({
+          success: true,
+          algorithm: "AES-256-GCM",
+          operation: "encrypt-decrypt",
+          ciphertext: "8f2a91c4...encrypted-data",
+          decryptedMessage: message,
+          messageMatch: true,
+          encryptionTimeMs: 0.08,
+          decryptionTimeMs: 0.06,
+          ciphertextSize: 64,
+        })
+      } else {
+        const data = await requestEncryptMessage(message)
+        setResult(data)
+      }
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Encryption failed"
+      )
+    } finally {
       setLoading(false)
-    }, 800)
+    }
   }
 
   return (
@@ -72,13 +94,17 @@ function EncryptionDemo() {
         </button>
       </div>
 
+      {error && <ErrorMessage message={error} />}
+
       {result && (
         <>
           <div className="encryptionFlow">
             <div className="partyCard">
               <span>STEP 1</span>
               <h3>ML-KEM-768</h3>
-              <p>Establish shared cryptographic material.</p>
+              <p>
+                Establish shared cryptographic material.
+              </p>
             </div>
 
             <div className="flowArrow">
@@ -98,7 +124,9 @@ function EncryptionDemo() {
             <div className="partyCard">
               <span>STEP 3</span>
               <h3>Decrypt</h3>
-              <p>Recover and authenticate the message.</p>
+              <p>
+                Recover and authenticate the message.
+              </p>
             </div>
           </div>
 
