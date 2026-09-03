@@ -22,3 +22,21 @@ target_include_directories(quantumshift PRIVATE
 target_link_libraries(quantumshift
     OpenSSL::Crypto
 )
+
+if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
+    target_compile_options(quantumshift PRIVATE
+        -Wall
+        -Wextra
+        -Wpedantic
+        -Wconversion
+        -Wshadow
+        -Wformat=2
+        -Wundef
+        -fsanitize=address,undefined
+        -fno-omit-frame-pointer
+    )
+
+    target_link_options(quantumshift PRIVATE
+        -fsanitize=address,undefined
+    )
+endif()

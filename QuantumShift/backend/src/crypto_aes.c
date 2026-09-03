@@ -382,10 +382,10 @@ int run_aes_gcm(AESGCMResult *out)
      */
 
     memcpy(
-        tampered_ciphertext,
-        ciphertext,
-        ciphertext_len
-    );
+    tampered_ciphertext,
+    ciphertext,
+    (size_t)ciphertext_len
+);
 
     tampered_ciphertext[0] ^= 0x01;
 
