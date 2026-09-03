@@ -1,5 +1,15 @@
-QuantumShift/backend/build/
-*.o
-*.out
-.DS_Store
+# Node
+node_modules/
+dist/
 
+# Environment
+.env
+.env.*
+!.env.example
+
+# CMake
+backend/c/build/
+
+# OS / editor
+.DS_Store
+Thumbs.db

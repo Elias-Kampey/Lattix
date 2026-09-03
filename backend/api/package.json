@@ -1,0 +1,14 @@
+{
+  "name": "ciphershift-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "HTTP bridge for the CipherShift C cryptographic backend",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  }
+}

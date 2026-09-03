@@ -10,15 +10,15 @@ const PORT = 3001
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const quantumShiftBinary =
+const cipherShiftBinary =
   process.platform === "win32"
     ? path.resolve(
         __dirname,
-        "../QuantumShift/backend/build/Debug/quantumshift.exe"
+        "../c/build/Debug/quantumshift.exe"
       )
     : path.resolve(
         __dirname,
-        "../QuantumShift/backend/build/quantumshift"
+        "../c/build/quantumshift"
       )
 
 const allowedOperations = new Set([
@@ -39,6 +39,7 @@ app.get("/", (req, res) => {
   res.json({
     success: true,
     service: "CipherShift API",
+    runtime: "C / OpenSSL",
     endpoints: [
       "/api/ml-kem",
       "/api/ml-dsa",
@@ -58,7 +59,7 @@ app.get("/api/:operation", (req, res) => {
   }
 
   execFile(
-    quantumShiftBinary,
+    cipherShiftBinary,
     [operation],
     {
       timeout: 10000,
@@ -76,10 +77,13 @@ app.get("/api/:operation", (req, res) => {
 
       try {
         const result = JSON.parse(stdout.trim())
+
         return res.json(result)
       } catch {
         console.error("Failed to parse C backend JSON.")
+        console.error("stdout:")
         console.error(stdout)
+        console.error("stderr:")
         console.error(stderr)
 
         return res.status(500).json({

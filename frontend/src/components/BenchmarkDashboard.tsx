@@ -1,42 +1,87 @@
 function BenchmarkDashboard() {
   return (
     <div className="benchmarkDashboard">
-      <div className="exchangeHeader">
+      <div className="operationHeader">
         <div>
-          <h2>Cryptographic Comparison</h2>
-          <p>Classical vs post-quantum key establishment</p>
+          <span className="operationEyebrow">
+            MIGRATION COMPARISON
+          </span>
+
+          <h2>Classical vs post-quantum.</h2>
+
+          <p>
+            See how the data footprint changes when moving from
+            classical X25519 key exchange to ML-KEM-768.
+          </p>
         </div>
 
         <span className="benchmarkNotice">
-          Size Comparison
+          SIZE COMPARISON
         </span>
       </div>
 
-      <div className="benchmarkComparison">
-        <div className="benchmarkCard">
-          <span>CLASSICAL</span>
+      <div className="comparisonHero">
+        <div className="comparisonSide classicalSide">
+          <span className="comparisonType">
+            CLASSICAL
+          </span>
+
           <h3>X25519</h3>
 
-          <div className="benchmarkMetrics">
+          <div className="bigMetric">
+            <strong>32</strong>
+            <span>B</span>
+          </div>
+
+          <p>Public key</p>
+
+          <div className="sizeBar classicalBar">
+            <span />
+          </div>
+
+          <div className="comparisonDetails">
             <div>
               <small>Public Key</small>
               <strong>32 B</strong>
             </div>
 
             <div>
-              <small>Key Exchange</small>
-              <strong>Classical</strong>
+              <small>Shared Secret</small>
+              <strong>32 B</strong>
             </div>
           </div>
         </div>
 
-        <div className="benchmarkVs">VS</div>
+        <div className="comparisonCenter">
+          <span>VS</span>
 
-        <div className="benchmarkCard">
-          <span>POST-QUANTUM</span>
+          <div className="migrationArrow">
+            <span />
+            <strong>→</strong>
+          </div>
+
+          <small>MIGRATION</small>
+        </div>
+
+        <div className="comparisonSide quantumSide">
+          <span className="comparisonType">
+            POST-QUANTUM
+          </span>
+
           <h3>ML-KEM-768</h3>
 
-          <div className="benchmarkMetrics">
+          <div className="bigMetric">
+            <strong>1184</strong>
+            <span>B</span>
+          </div>
+
+          <p>Public key</p>
+
+          <div className="sizeBar quantumBar">
+            <span />
+          </div>
+
+          <div className="comparisonDetails">
             <div>
               <small>Public Key</small>
               <strong>1184 B</strong>
@@ -50,15 +95,23 @@ function BenchmarkDashboard() {
         </div>
       </div>
 
-      <div className="benchmarkSummary">
-        <h3>Migration Tradeoff</h3>
+      <div className="tradeoffPanel">
+        <div className="tradeoffIndex">01</div>
 
-        <p>
-          Post-quantum key establishment requires substantially
-          larger cryptographic data than classical X25519. Runtime
-          measurements shown elsewhere in CipherShift are produced
-          directly by the C/OpenSSL backend.
-        </p>
+        <div>
+          <span>THE TRADEOFF</span>
+
+          <h3>
+            Larger data. Quantum-resistant security.
+          </h3>
+
+          <p>
+            ML-KEM-768 requires a substantially larger
+            cryptographic footprint than classical X25519.
+            Runtime measurements elsewhere in CipherShift are
+            produced directly by the live C/OpenSSL backend.
+          </p>
+        </div>
       </div>
     </div>
   )
