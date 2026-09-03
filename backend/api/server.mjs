@@ -3,6 +3,7 @@ import cors from "cors"
 import { execFile } from "node:child_process"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import fs from "node:fs"
 
 const app = express()
 const PORT = 3001
@@ -35,11 +36,12 @@ app.use(
 
 app.use(express.json())
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   res.json({
     success: true,
     service: "CipherShift API",
     runtime: "C / OpenSSL",
+    backendReady: fs.existsSync(cipherShiftBinary),
     endpoints: [
       "/api/ml-kem",
       "/api/ml-dsa",
@@ -55,6 +57,17 @@ app.get("/api/:operation", (req, res) => {
     return res.status(400).json({
       success: false,
       error: "Invalid operation",
+    })
+  }
+
+  if (!fs.existsSync(cipherShiftBinary)) {
+    console.error(
+      `CipherShift binary not found: ${cipherShiftBinary}`
+    )
+
+    return res.status(500).json({
+      success: false,
+      error: "CipherShift C backend is not built",
     })
   }
 
@@ -77,7 +90,6 @@ app.get("/api/:operation", (req, res) => {
 
       try {
         const result = JSON.parse(stdout.trim())
-
         return res.json(result)
       } catch {
         console.error("Failed to parse C backend JSON.")
@@ -95,8 +107,21 @@ app.get("/api/:operation", (req, res) => {
   )
 })
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, "127.0.0.1", () => {
   console.log(
     `CipherShift API running at http://localhost:${PORT}`
   )
+
+  console.log(
+    `C backend: ${
+      fs.existsSync(cipherShiftBinary) ? "ready" : "not found"
+    }`
+  )
+
+  console.log(`Binary: ${cipherShiftBinary}`)
+})
+
+server.on("error", (error) => {
+  console.error("API server error:")
+  console.error(error)
 })
