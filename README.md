@@ -6,8 +6,6 @@ CipherShift makes post-quantum migration tangible by running ML-KEM-768 key esta
 
 Instead of displaying predetermined demo values, the application executes cryptographic operations locally and returns live measurements, validation results, and tamper-detection outcomes to the TypeScript interface.
 
-![CipherShift](docs/screenshots/hero.png)
-
 ---
 
 ## Why CipherShift?
