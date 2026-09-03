@@ -31,7 +31,7 @@ int run_ml_dsa(MLDSAResult *out)
     size_t signature_len = 0;
 
     const unsigned char message[] =
-        "Hello QuantumShift";
+        "Hello Lattix";
 
     const unsigned char tampered_message[] =
         "Hello QuantumShifx";
@@ -60,7 +60,7 @@ int run_ml_dsa(MLDSAResult *out)
     out->sign_ms = 0.0;
     out->verify_ms = 0.0;
 
-    printf("QuantumShift - ML-DSA-65 Signature Test\n");
+    printf("Lattix - ML-DSA-65 Signature Test\n");
     printf("--------------------------------------\n\n");
 
     /*

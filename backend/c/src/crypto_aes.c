@@ -27,7 +27,7 @@ static double elapsed_ms(struct timespec start, struct timespec end)
 int run_aes_gcm(AESGCMResult *out)
 {
     const unsigned char plaintext[] =
-        "QuantumShift AES-256-GCM test message";
+        "Lattix AES-256-GCM test message";
 
     unsigned char key[AES_KEY_SIZE];
     unsigned char iv[AES_IV_SIZE];
@@ -70,7 +70,7 @@ int run_aes_gcm(AESGCMResult *out)
     out->encrypt_ms = 0.0;
     out->decrypt_ms = 0.0;
 
-    printf("QuantumShift - AES-256-GCM Test\n");
+    printf("Lattix - AES-256-GCM Test\n");
     printf("--------------------------------------\n\n");
 
     /*

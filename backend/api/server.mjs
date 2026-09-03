@@ -11,15 +11,15 @@ const PORT = 3001
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const cipherShiftBinary =
+const lattixBinary =
   process.platform === "win32"
     ? path.resolve(
         __dirname,
-        "../c/build/Debug/quantumshift.exe"
+        "../c/build/Debug/lattix.exe"
       )
     : path.resolve(
         __dirname,
-        "../c/build/quantumshift"
+        "../c/build/lattix"
       )
 
 const allowedOperations = new Set([
@@ -39,9 +39,9 @@ app.use(express.json())
 app.get("/", (_req, res) => {
   res.json({
     success: true,
-    service: "CipherShift API",
+    service: "Lattix API",
     runtime: "C / OpenSSL",
-    backendReady: fs.existsSync(cipherShiftBinary),
+    backendReady: fs.existsSync(lattixBinary),
     endpoints: [
       "/api/ml-kem",
       "/api/ml-dsa",
@@ -60,19 +60,19 @@ app.get("/api/:operation", (req, res) => {
     })
   }
 
-  if (!fs.existsSync(cipherShiftBinary)) {
+  if (!fs.existsSync(lattixBinary)) {
     console.error(
-      `CipherShift binary not found: ${cipherShiftBinary}`
+      `Lattix binary not found: ${lattixBinary}`
     )
 
     return res.status(500).json({
       success: false,
-      error: "CipherShift C backend is not built",
+      error: "Lattix C backend is not built",
     })
   }
 
   execFile(
-    cipherShiftBinary,
+    lattixBinary,
     [operation],
     {
       timeout: 10000,
@@ -84,7 +84,7 @@ app.get("/api/:operation", (req, res) => {
 
         return res.status(500).json({
           success: false,
-          error: "CipherShift backend operation failed",
+          error: "Lattix backend operation failed",
         })
       }
 
@@ -109,16 +109,16 @@ app.get("/api/:operation", (req, res) => {
 
 const server = app.listen(PORT, "127.0.0.1", () => {
   console.log(
-    `CipherShift API running at http://localhost:${PORT}`
+    `Lattix API running at http://localhost:${PORT}`
   )
 
   console.log(
     `C backend: ${
-      fs.existsSync(cipherShiftBinary) ? "ready" : "not found"
+      fs.existsSync(lattixBinary) ? "ready" : "not found"
     }`
   )
 
-  console.log(`Binary: ${cipherShiftBinary}`)
+  console.log(`Binary: ${lattixBinary}`)
 })
 
 server.on("error", (error) => {

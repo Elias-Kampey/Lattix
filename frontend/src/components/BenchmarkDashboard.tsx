@@ -108,7 +108,7 @@ function BenchmarkDashboard() {
           <p>
             ML-KEM-768 requires a substantially larger
             cryptographic footprint than classical X25519.
-            Runtime measurements elsewhere in CipherShift are
+            Runtime measurements elsewhere in Lattix are
             produced directly by the live C/OpenSSL backend.
           </p>
         </div>

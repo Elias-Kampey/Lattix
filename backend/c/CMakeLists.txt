@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(QuantumShift C)
+project(Lattix C)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 find_package(OpenSSL REQUIRED)
 
-add_executable(quantumshift
+add_executable(lattix
     src/main.c
     src/crypto_kem.c
     src/crypto_signature.c
@@ -15,10 +15,10 @@ add_executable(quantumshift
     src/api.c
 )
 
-target_include_directories(quantumshift PRIVATE
+target_include_directories(lattix PRIVATE
     include
 )
 
-target_link_libraries(quantumshift
+target_link_libraries(lattix
     OpenSSL::Crypto
 )

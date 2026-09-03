@@ -1,4 +1,4 @@
-# CipherShift
+# Lattix
 
 Post-Quantum Cryptography Migration Lab.
 

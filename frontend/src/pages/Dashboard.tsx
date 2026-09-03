@@ -64,7 +64,7 @@ function Dashboard() {
               <span />
             </span>
 
-            <span>CipherShift</span>
+            <span>Lattix</span>
           </button>
 
           <div className="navLinks">
@@ -164,7 +164,7 @@ function Dashboard() {
 
                   <p>
                     Native operations executed locally through the
-                    CipherShift C backend.
+                    Lattix C backend.
                   </p>
                 </div>
 
@@ -295,7 +295,7 @@ function Dashboard() {
             </div>
 
             <div className="labPath">
-              ciphershift
+              lattix
               <span>/</span>
               {modeLabels[mode].toLowerCase()}
               <span>/</span>
@@ -432,7 +432,7 @@ function Dashboard() {
 
                 <p>
                   Executable cryptographic demos currently run
-                  through CipherShift's Post-Quantum mode.
+                  through Lattix's Post-Quantum mode.
                   Migration comparison remains available across
                   modes.
                 </p>
@@ -460,7 +460,7 @@ function Dashboard() {
         </h2>
 
         <p>
-          CipherShift turns migration concepts into measurable
+          Lattix turns migration concepts into measurable
           cryptographic operations.
         </p>
 
@@ -477,7 +477,7 @@ function Dashboard() {
             <span />
           </span>
 
-          CipherShift
+          Lattix
         </div>
 
         <span>TypeScript interface</span>
