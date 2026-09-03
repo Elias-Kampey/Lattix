@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     }
 
     printf("\n======================================\n");
-    printf("QuantumShift Backend\n");
+    printf("Lattix Backend\n");
     printf("======================================\n\n");
 
     if (run_ml_kem_demo() != 0)

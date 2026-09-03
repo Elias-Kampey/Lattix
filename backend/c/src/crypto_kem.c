@@ -56,7 +56,7 @@ int run_ml_kem(MLKEMResult *out)
     out->encapsulation_ms = 0.0;
     out->decapsulation_ms = 0.0;
 
-    printf("QuantumShift - ML-KEM-768 Key Exchange\n");
+    printf("Lattix - ML-KEM-768 Key Exchange\n");
     printf("--------------------------------------\n\n");
 
     /*

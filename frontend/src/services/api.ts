@@ -13,7 +13,7 @@ async function request<T>(path: string): Promise<T> {
   try {
     response = await fetch(`${API_URL}${path}`)
   } catch {
-    throw new Error("Unable to connect to CipherShift backend")
+    throw new Error("Unable to connect to Lattix backend")
   }
 
   if (!response.ok) {

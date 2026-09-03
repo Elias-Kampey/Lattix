@@ -12,7 +12,7 @@
 #define CLOCK_MONOTONIC 1
 #endif
 
-static inline int ciphershift_clock_gettime(
+static inline int lattix_clock_gettime(
     int clock_id,
     struct timespec *ts
 )
@@ -45,7 +45,7 @@ static inline int ciphershift_clock_gettime(
     return 0;
 }
 
-#define clock_gettime ciphershift_clock_gettime
+#define clock_gettime lattix_clock_gettime
 
 #define dup _dup
 #define dup2 _dup2

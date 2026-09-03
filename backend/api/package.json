@@ -1,8 +1,8 @@
 {
-  "name": "ciphershift-api",
+  "name": "lattix-api",
   "version": "1.0.0",
   "private": true,
-  "description": "HTTP bridge for the CipherShift C cryptographic backend",
+  "description": "HTTP bridge for the Lattix C cryptographic backend",
   "type": "module",
   "scripts": {
     "start": "node server.mjs"

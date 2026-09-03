@@ -1,18 +1,18 @@
-# CipherShift
+# Lattix
 
 **An interactive post-quantum cryptography migration lab backed by native C execution.**
 
-CipherShift makes post-quantum migration tangible by running ML-KEM-768 key establishment, ML-DSA-65 digital signatures, and AES-256-GCM authenticated encryption through a native C/OpenSSL backend.
+Lattix makes post-quantum migration tangible by running ML-KEM-768 key establishment, ML-DSA-65 digital signatures, and AES-256-GCM authenticated encryption through a native C/OpenSSL backend.
 
 Instead of displaying predetermined demo values, the application executes cryptographic operations locally and returns live measurements, validation results, and tamper-detection outcomes to the TypeScript interface.
 
 ---
 
-## Why CipherShift?
+## Why Lattix?
 
 Post-quantum migration is not simply a matter of replacing one algorithm with another.
 
-New cryptographic standards introduce different key sizes, ciphertext sizes, execution characteristics, and integration requirements. CipherShift was built to make several of those differences visible through an interactive application rather than static examples.
+New cryptographic standards introduce different key sizes, ciphertext sizes, execution characteristics, and integration requirements. Lattix was built to make several of those differences visible through an interactive application rather than static examples.
 
 The project turns migration concepts into executable workflows:
 
@@ -24,7 +24,7 @@ Each supported operation runs through the native cryptographic backend and retur
 
 ## Live Cryptography Lab
 
-CipherShift currently exposes four interactive views.
+Lattix currently exposes four interactive views.
 
 ### ML-KEM-768 Key Establishment
 
@@ -48,7 +48,7 @@ A successful run confirms that the key-establishment operation completed and exp
 
 The signature workflow demonstrates both successful verification and tamper detection.
 
-CipherShift:
+Lattix:
 
 1. generates the signing material
 2. produces an ML-DSA-65 signature
@@ -79,7 +79,7 @@ Encryption and decryption timing measurements are returned with each execution.
 
 ### Classical vs Post-Quantum
 
-CipherShift also includes a focused migration comparison between classical X25519 and ML-KEM-768.
+Lattix also includes a focused migration comparison between classical X25519 and ML-KEM-768.
 
 | Algorithm | Public Key | Exchange Data |
 | --- | ---: | ---: |
@@ -112,7 +112,7 @@ flowchart LR
     B --> A
 ```
 
-CipherShift is split into three layers:
+Lattix is split into three layers:
 
 **Frontend**  
 React and TypeScript provide the interactive visualization, operation controls, loading states, result presentation, comparison interface, and error handling.
@@ -140,7 +140,7 @@ aes
 For example:
 
 ```cmd
-quantumshift.exe ml-kem
+lattix.exe ml-kem
 ```
 
 returns structured output similar to:
@@ -190,7 +190,7 @@ Example:
 ```json
 {
   "success": true,
-  "service": "CipherShift API",
+  "service": "Lattix API",
   "runtime": "C / OpenSSL",
   "backendReady": true
 }
@@ -234,7 +234,7 @@ The API validates requested operations, checks that the compiled native backend 
 ## Project Structure
 
 ```text
-ciphershift/
+lattix/
 │
 ├── frontend/
 │   ├── public/
@@ -306,15 +306,15 @@ The current Windows development setup uses:
 - Desktop development with C++
 - OpenSSL
 
-CipherShift has been tested using the Visual Studio 2022 x64 toolchain on Windows.
+Lattix has been tested using the Visual Studio 2022 x64 toolchain on Windows.
 
 ---
 
 ### 1. Clone the Repository
 
 ```powershell
-git clone https://github.com/Elias-Kampey/ciphershift.git
-cd ciphershift
+git clone https://github.com/Elias-Kampey/lattix.git
+cd lattix
 ```
 
 ---
@@ -344,13 +344,13 @@ cmake --build build --config Debug
 The executable should be generated at:
 
 ```text
-backend/c/build/Debug/quantumshift.exe
+backend/c/build/Debug/lattix.exe
 ```
 
 Test ML-KEM directly:
 
 ```cmd
-build\Debug\quantumshift.exe ml-kem
+build\Debug\lattix.exe ml-kem
 ```
 
 A successful execution should return JSON containing:
@@ -377,7 +377,7 @@ npm start
 The API should report:
 
 ```text
-CipherShift API running at http://localhost:3001
+Lattix API running at http://localhost:3001
 C backend: ready
 ```
 
@@ -433,14 +433,14 @@ localhost:3001
         │ execFile()
         ▼
 C / OpenSSL
-quantumshift.exe
+lattix.exe
 ```
 
 ---
 
 ## Testing
 
-CipherShift was manually tested across the complete frontend-to-native execution path.
+Lattix was manually tested across the complete frontend-to-native execution path.
 
 ### ML-KEM-768
 
@@ -493,19 +493,19 @@ Verified:
 
 ## Current Scope
 
-CipherShift currently executes cryptographic workflows through **Post-Quantum mode**.
+Lattix currently executes cryptographic workflows through **Post-Quantum mode**.
 
 The Classical and Hybrid selectors are present as migration contexts in the interface, but their executable workflows are outside the current project scope.
 
 The comparison view uses X25519 data to illustrate the difference in cryptographic footprint between classical and post-quantum key establishment.
 
-CipherShift is an educational and portfolio project and is not intended to be used as production cryptographic infrastructure.
+Lattix is an educational and portfolio project and is not intended to be used as production cryptographic infrastructure.
 
 ---
 
 ## What I Learned
 
-Building CipherShift reinforced that integrating native cryptographic code into an interactive application introduces challenges well beyond implementing the algorithms themselves.
+Building Lattix reinforced that integrating native cryptographic code into an interactive application introduces challenges well beyond implementing the algorithms themselves.
 
 Some of the most useful engineering questions were:
 
@@ -553,4 +553,4 @@ Native cryptographic backend.
 ## Repository
 
 **GitHub:**  
-https://github.com/Elias-Kampey/ciphershift
+https://github.com/Elias-Kampey/lattix
