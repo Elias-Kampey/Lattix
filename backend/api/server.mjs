@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url"
 import fs from "node:fs"
 
 const app = express()
-const PORT = 3001
+const PORT = process.env.PORT || 3001;
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -28,11 +28,20 @@ const allowedOperations = new Set([
   "aes",
 ])
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-  })
-)
+const allowedOrigins = [
+  "http://localhost:5173",
+  process.env.FRONTEND_ORIGIN
+].filter(Boolean);
+
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Not allowed by CORS"));
+  }
+}));
 
 app.use(express.json())
 
@@ -107,7 +116,7 @@ app.get("/api/:operation", (req, res) => {
   )
 })
 
-const server = app.listen(PORT, "127.0.0.1", () => {
+const server = app.listen(PORT, "0.0.0.0", () => {
   console.log(
     `Lattix API running at http://localhost:${PORT}`
   )
