@@ -540,7 +540,7 @@ Frontend, application integration, and product interface.
 - reorganized the repository into separate frontend, API, and native backend layers
 - performed end-to-end integration and UI testing
 
-### MK
+### Mkareos Kzkoz
 
 Native cryptographic backend.
 
