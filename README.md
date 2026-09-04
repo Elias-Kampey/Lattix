@@ -2,6 +2,8 @@
 
 **An interactive post-quantum cryptography migration lab backed by native C execution.**
 
+[Live Demo](https://lattix-olive.vercel.app)
+
 Lattix makes post-quantum migration tangible by running ML-KEM-768 key establishment, ML-DSA-65 digital signatures, and AES-256-GCM authenticated encryption through a native C/OpenSSL backend.
 
 Instead of displaying predetermined demo values, the application executes cryptographic operations locally and returns live measurements, validation results, and tamper-detection outcomes to the TypeScript interface.
